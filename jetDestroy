@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if test -z "$1"
+then
+	echo "I Need The IP range you're looking for."
+else
+	sudo nmap -Pn -oG - $1 -p 9100 --open | awk '/open/{ s = $2; for (i = 5; i <= NF-4; i++) s = substr($i,1,length($i)-4) "\n"; split(s, a, "/"); print $2}' > jetdirect.txt
+
+	sed -i '1d' jetdirect.txt
+
+	python jetDestroy.py
+fi
